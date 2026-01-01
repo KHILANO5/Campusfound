@@ -5,9 +5,31 @@ import Layout from '../components/Layout';
 import { usePosts } from '../context/PostContext';
 
 const Feed = () => {
-    const { posts } = usePosts();
+    const { posts, loading, error } = usePosts();
     const [filter, setFilter] = useState('all'); // all, lost, found
     const [search, setSearch] = useState('');
+
+    if (loading) {
+        return (
+            <Layout>
+                <div className="flex justify-center items-center h-64">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                </div>
+            </Layout>
+        );
+    }
+
+    if (error) {
+        return (
+            <Layout>
+                <div className="text-center py-16 bg-red-50 rounded-xl border border-red-200">
+                    <h3 className="text-red-800 font-semibold">Error Loading Posts</h3>
+                    <p className="text-red-600 mt-2">{error}</p>
+                    <p className="text-sm text-gray-500 mt-4">Please check your network connection or server status.</p>
+                </div>
+            </Layout>
+        );
+    }
 
     const filteredPosts = posts.filter(post => {
         const matchesFilter = filter === 'all' || post.type === filter;
