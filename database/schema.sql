@@ -2,12 +2,31 @@
 -- CampusFound Database Schema
 -- MySQL 5.7+ / 8.0+
 -- ============================================================================
--- Description: Schema for Lost & Found application for college campuses
+-- Description: Complete database setup for Lost & Found application
 -- Author: Yash (Database Team)
 -- Created: 2026-01-01
 -- ============================================================================
 
+-- ============================================================================
+-- DATABASE CREATION
+-- ============================================================================
+-- Create the database if it doesn't exist
+-- ============================================================================
+
+CREATE DATABASE IF NOT EXISTS campusfound_db 
+  CHARACTER SET utf8mb4 
+  COLLATE utf8mb4_unicode_ci;
+
+-- Use the database
+USE campusfound_db;
+
+-- ============================================================================
+-- TABLE CLEANUP
+-- ============================================================================
 -- Drop existing tables if they exist (for development reset)
+-- Note: Must drop in correct order due to foreign key constraints
+-- ============================================================================
+
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS users;
 

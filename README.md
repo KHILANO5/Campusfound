@@ -76,12 +76,16 @@ JWT_SECRET=your_jwt_secret
 git clone <repo-url> campusfound
 cd campusfound
 ```
-2. Create DB and apply schema:
-```sql
-CREATE DATABASE campusfound_db;
--- run database/schema.sql (or paste schema below into your MySQL client)
+2. Execute schema (creates database and tables):
+```bash
+# This single command creates the database and all tables
+mysql -u root -p < database/schema.sql
 ```
-3. Start backend:
+3. (Optional) Load sample data:
+```bash
+mysql -u root -p < database/seeds/sample_data.sql
+```
+4. Start backend:
 ```bash
 cd server
 npm install

@@ -39,56 +39,39 @@ Expected output: "The MySQL80 service was started successfully."
 
 ---
 
-### Step 2: Create the Database
+### Step 2: Execute Schema File (Creates Database + Tables)
 
-Open MySQL command line:
+From your project root directory, run this **single command**:
+
 ```powershell
-mysql -u root -p
+# Navigate to project root first
+cd f:/Hackathon/Odoo_hackthon/CampusFound/Campusfound
+
+# Execute schema (creates everything)
+mysql -u root -p < database/schema.sql
 ```
 
-Enter your MySQL root password when prompted.
+**Enter your MySQL root password when prompted.**
 
-Then run:
-```sql
-CREATE DATABASE campusfound_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
-
-Verify it was created:
-```sql
-SHOW DATABASES;
-```
-
-You should see `campusfound_db` in the list.
-
-Exit MySQL:
-```sql
-EXIT;
-```
+This one command will:
+✅ Create `campusfound_db` database  
+✅ Create `users` table  
+✅ Create `posts` table  
+✅ Set up foreign keys and indexes
 
 ---
 
-### Step 3: Execute the Schema
+### Step 3: Load Sample Data (Optional but Recommended)
 
-From your project root directory, run:
 ```powershell
-mysql -u root -p campusfound_db < database/schema.sql
+mysql -u root -p < database/seeds/sample_data.sql
 ```
 
-This creates the `users` and `posts` tables.
+This adds 5 test users and 14 test posts for development.
 
 ---
 
-### Step 4: Insert Sample Data (Optional but Recommended)
-
-```powershell
-mysql -u root -p campusfound_db < database/seeds/sample_data.sql
-```
-
-This adds 5 test users and 14 test posts.
-
----
-
-### Step 5: Verify Everything Works
+### Step 4: Verify Everything Works
 
 Connect to the database:
 ```powershell
@@ -221,7 +204,8 @@ Save it as `docs/er_diagram.png`
 ## 🎯 Success Checklist
 
 - [ ] MySQL service is running
-- [ ] `campusfound_db` database created
+- [ ] Executed `schema.sql` successfully (creates database + tables)
+- [ ] `campusfound_db` database created automatically
 - [ ] `users` table exists with correct schema
 - [ ] `posts` table exists with correct schema
 - [ ] Foreign key relationship works

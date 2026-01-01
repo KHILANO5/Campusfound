@@ -33,39 +33,25 @@ database/
 mysql --version
 ```
 
-### Step 2: Create Database
+### Step 2: Execute Schema File
 
-Open MySQL client:
-```bash
-mysql -u root -p
-```
-
-Create the database:
-```sql
-CREATE DATABASE campusfound_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
-
-Verify database creation:
-```sql
-SHOW DATABASES;
--- You should see 'campusfound_db' in the list
-```
-
-Exit MySQL:
-```sql
-EXIT;
-```
-
-### Step 3: Execute Schema
-
-Run the schema file to create tables:
+The schema.sql file will create the database AND all tables in one command:
 
 ```bash
-# From the project root directory
-mysql -u root -p campusfound_db < database/schema.sql
+# From the project root directory (Campusfound/)
+mysql -u root -p < database/schema.sql
 ```
 
-### Step 4: Insert Sample Data (Optional)
+**Enter your MySQL root password when prompted.**
+
+This single command will:
+1. Create the `campusfound_db` database (if it doesn't exist)
+2. Use the campusfound_db database
+3. Drop existing tables (if any)
+4. Create the `users` table
+5. Create the `posts` table with foreign keys and indexes
+
+### Step 3: Insert Sample Data (Optional)
 
 Load test data for development:
 
@@ -73,7 +59,9 @@ Load test data for development:
 mysql -u root -p campusfound_db < database/seeds/sample_data.sql
 ```
 
-### Step 5: Verify Installation
+This adds 5 sample users and 14 sample posts.
+
+### Step 4: Verify Installation
 
 Connect to database and verify tables:
 
