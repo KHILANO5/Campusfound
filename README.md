@@ -1,53 +1,336 @@
 # CampusFound 📘
 
-**A lightweight Lost & Found web application — a hackathon practice project.**
+A Lost & Found web application for college campuses where students can report and recover lost items.
 
-CampusFound helps students report and recover lost items using a simple workflow so your team can practice authentication, database design, API development, frontend/backend integration, and GitHub collaboration.
+## 🎯 Overview
+CampusFound helps students report lost items and post found items. Users can register, create posts (lost/found), browse all posts, and mark items as resolved when recovered.
 
----
+## ✨ Features
+- 👤 User registration & authentication
+- 📝 Create lost/found item posts
+- 📋 Browse all posts with user details
+- ✅ Mark items as resolved
+- 🔍 View individual post details
 
-## Table of Contents
-- [Project Overview](#project-overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [Database Schema](#database-schema)
-- [API Reference](#api-reference)
-- [Development Workflow](#development-workflow)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [Roadmap](#roadmap)
-- [License & Contact](#license--contact)
+## 🛠️ Tech Stack
+- **Frontend:** React 18 + Vite + Tailwind CSS
+- **Backend:** Node.js 16+ + Express.js
+- **Database:** MySQL 8.0
+- **Security:** bcrypt for password hashing
 
----
-
-## Project Overview
-CampusFound is a focused practice project built to simulate a real development workflow for hackathon preparation. Users can register/login, post lost or found items, view posts, and mark items as resolved.
-
-## Features
-- ✅ User registration & login (JWT)
-- ✅ Create Lost / Found posts
-- ✅ View all posts (public)
-- ✅ Mark post as resolved
-
-## Tech Stack
-**Frontend:** React (Vite) + Tailwind CSS
-
-**Backend:** Node.js + Express
-
-**Database:** MySQL (local / dev)
-
-**Dev & Deploy:** GitHub (branch-based workflow), Vercel for frontend (optional)
-
----
-
-## Project Structure
+## 📁 Project Structure
 ```
 campusfound/
-├── client/      # React frontend (Vite)
-├── server/      # Node.js backend (Express)
-├── database/    # MySQL schema / migrations
+├── client/              # React frontend application
+│   ├── src/            # Source code
+│   ├── public/         # Static assets
+│   └── package.json    # Frontend dependencies
+├── server/             # Express backend API
+│   ├── config/        # Database configuration
+│   ├── controllers/   # Business logic
+│   ├── routes/        # API routes
+│   ├── .env           # Environment variables (create this)
+│   └── package.json   # Backend dependencies
+├── database/          # Database schema & seeds
+│   ├── schema.sql     # Database structure
+│   └── seeds/         # Sample data
+└── README.md          # This file
+```
+
+## 📋 Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+1. **Node.js** (v16.0.0 or higher)
+   - Download from [nodejs.org](https://nodejs.org/)
+   - Verify: `node --version`
+
+2. **npm** (comes with Node.js)
+   - Verify: `npm --version`
+
+3. **MySQL Server** (v8.0 or higher)
+   - Download from [mysql.com](https://dev.mysql.com/downloads/)
+   - Verify: `mysql --version`
+
+4. **Git** (for cloning repository)
+   - Download from [git-scm.com](https://git-scm.com/)
+   - Verify: `git --version`
+
+## 🚀 Installation Guide
+
+**→ For detailed step-by-step instructions, see [INSTALLATION.md](INSTALLATION.md)**
+
+### Quick Start (Experienced Users)
+
+#### Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/KHILANO5/Campusfound.git
+cd Campusfound/Campusfound
+```
+
+### Step 2: Database Setup
+
+1. **Start MySQL Server**
+   ```bash
+   # Windows
+   net start MySQL80
+   
+   # Check if MySQL is running
+   mysql --version
+   ```
+
+2. **Create Database and Tables**
+   ```bash
+   # Execute schema file (creates database and tables)
+   mysql -u root -p < database/schema.sql
+   # Enter your MySQL password when prompted
+   ```
+
+3. **Load Sample Data** (Optional - for testing)
+   ```bash
+   mysql -u root -p campusfound_db < database/seeds/sample_data.sql
+   ```
+
+4. **Verify Database**
+   ```bash
+   mysql -u root -p campusfound_db
+   ```
+   ```sql
+   SHOW TABLES;        # Should show: users, posts
+   SELECT COUNT(*) FROM users;  # Should show: 5
+   SELECT COUNT(*) FROM posts;  # Should show: 14
+   exit;
+   ```
+
+### Step 3: Backend Setup
+
+1. **Navigate to server directory**
+   ```bash
+   cd server
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Create environment file**
+   ```bash
+   # Create .env file with these variables:
+   ```
+   Create a file named `.env` in the `server/` directory:
+   ```env
+   PORT=3000
+   DB_HOST=localhost
+   DB_PORT=3306
+   DB_USER=root
+   DB_PASSWORD=your_mysql_password_here
+   DB_NAME=campusfound_db
+   DB_CHARSET=utf8mb4
+   NODE_ENV=development
+   ```
+   ⚠️ **Replace `your_mysql_password_here` with your actual MySQL password**
+
+4. **Start the server**
+   ```bash
+   # Development mode (auto-reload on changes)
+   npm run dev
+   
+   # OR Production mode
+   npm start
+   ```
+
+5. **Verify server is running**
+   - You should see: `Server running on http://localhost:3000`
+   - Test: Open browser and go to `http://localhost:3000/api/posts`
+
+### Step 4: Frontend Setup
+
+1. **Open new terminal** (keep server running)
+
+2. **Navigate to client directory**
+   ```bash
+   cd client
+   ```
+
+3. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+4. **Start development server**
+   ```bash
+   npm run dev
+   ```
+
+5. **Access the application**
+   - Open browser and go to `http://localhost:5173`
+   - You should see the CampusFound application
+
+## 🎮 Usage
+
+### First Time Users:
+
+1. **Register an Account**
+   - Click "Register" on the homepage
+   - Enter name, email, and password
+   - Click "Create Account"
+
+2. **Login**
+   - Enter your email and password
+   - Click "Login"
+
+3. **Create a Post**
+   - Click "New Post" button
+   - Select type: Lost or Found
+   - Enter title and description
+   - Submit the post
+
+4. **Browse Posts**
+   - View all lost and found items
+   - Click on any post to see details
+
+5. **Resolve Posts**
+   - When an item is recovered, mark it as resolved
+
+## 📡 API Documentation
+
+### Authentication Endpoints
+
+**Register User**
+```http
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+
+**Login User**
+```http
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+
+### Post Endpoints
+
+**Get All Posts**
+```http
+GET http://localhost:3000/api/posts
+```
+
+**Get Single Post**
+```http
+GET http://localhost:3000/api/posts/:id
+```
+
+**Create Post**
+```http
+POST http://localhost:3000/api/posts
+Content-Type: application/json
+
+{
+  "title": "Lost Blue Backpack",
+  "description": "Lost near library",
+  "type": "lost",
+  "user_id": 1
+}
+```
+
+**Resolve Post**
+```http
+PUT http://localhost:3000/api/posts/:id/resolve
+```
+
+## 🗄️ Database Schema
+
+### Users Table
+| Column | Type | Description |
+|--------|------|-------------|
+| user_id | INT (PK) | Auto-increment primary key |
+| name | VARCHAR(100) | User's full name |
+| email | VARCHAR(150) | Unique email address |
+| password_hash | VARCHAR(255) | Bcrypt hashed password |
+| created_at | TIMESTAMP | Account creation time |
+
+### Posts Table
+| Column | Type | Description |
+|--------|------|-------------|
+| post_id | INT (PK) | Auto-increment primary key |
+| title | VARCHAR(100) | Post title |
+| description | TEXT | Detailed description |
+| type | ENUM('lost','found') | Item type |
+| status | ENUM('open','resolved') | Post status (default: 'open') |
+| user_id | INT (FK) | Creator's user ID |
+| created_at | TIMESTAMP | Post creation time |
+| updated_at | TIMESTAMP | Last update time |
+
+## 🐛 Troubleshooting
+
+### Common Issues:
+
+**1. "MySQL connection failed"**
+- Check MySQL is running: `mysql --version`
+- Verify credentials in `server/.env` file
+- Test connection: `mysql -u root -p`
+
+**2. "Port 3000 already in use"**
+- Kill existing process or change PORT in `.env`
+- Windows: `netstat -ano | findstr :3000` then `taskkill /PID <PID> /F`
+
+**3. "Cannot find module"**
+- Run `npm install` in both server and client directories
+- Delete `node_modules` and `package-lock.json`, then reinstall
+
+**4. "Database doesn't exist"**
+- Run: `mysql -u root -p < database/schema.sql`
+
+**5. "Permission denied on MySQL"**
+- Check MySQL user has proper permissions
+- Grant permissions: `GRANT ALL PRIVILEGES ON campusfound_db.* TO 'root'@'localhost';`
+
+## 📚 Project Documentation
+
+For detailed documentation:
+- [Server API Documentation](server/README.md)
+- [Database Setup Guide](database/README.md)
+- [Frontend Documentation](client/README.md)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Commit changes: `git commit -m 'Add feature'`
+4. Push to branch: `git push origin feature-name`
+5. Submit a pull request
+
+## 👥 Team
+
+Developed by the CampusFound team
+
+## 📄 License
+
+MIT License - feel free to use this project for learning and development.
+
+## 📞 Support
+
+If you encounter any issues:
+1. Check the [Troubleshooting](#-troubleshooting) section
+2. Review documentation in server/, database/, and client/ folders
+3. Create an issue on GitHub
+
+---
+
+**Happy Coding! 🚀**
 ├── docs/        # Docs, ER diagrams, screenshots
 └── README.md
 ```
