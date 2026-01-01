@@ -177,21 +177,3 @@ License: MIT (choose your preferred OSS license)
 Contact: Khilan (project owner) — open an issue for questions or feature requests
 
 ---
-
-## Export to PDF
-Option 1 (Fast): copy this README into Google Docs → Export as PDF
-
-Option 2 (Developer):
-```bash
-# Save to campusfound_doc.md then:
-pandoc campusfound_doc.md -o CampusFound.pdf
-```
-
----
-
-If you'd like, I can:
-- ✅ Commit this `README.md` to your repo (done)
-- ✅ Add `docs/er_diagram.png` placeholder and `docs/screenshots/` templates
-- ✅ Generate a PDF export of this README
-
-Tell me which next step you want. 👍
