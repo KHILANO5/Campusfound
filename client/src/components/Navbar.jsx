@@ -26,6 +26,9 @@ const Navbar = () => {
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center space-x-4">
+                        <Link to="/feed">
+                            <Button variant="ghost" className="text-gray-600 font-medium">Browse Items</Button>
+                        </Link>
                         <Link to="/create-post">
                             <Button variant="outline" className="flex items-center gap-2">
                                 <PlusCircle className="w-4 h-4" />
@@ -59,6 +62,13 @@ const Navbar = () => {
             {isOpen && (
                 <div className="md:hidden bg-white border-b border-gray-200">
                     <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                        <Link
+                            to="/feed"
+                            className="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-md"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Browse Items
+                        </Link>
                         <Link
                             to="/create-post"
                             className="block px-3 py-2 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-md"
