@@ -62,6 +62,10 @@ CREATE TABLE posts (
   description TEXT NOT NULL COMMENT 'Detailed description of the item',
   type ENUM('lost', 'found') NOT NULL COMMENT 'Type of post: lost or found',
   status ENUM('open', 'resolved') NOT NULL DEFAULT 'open' COMMENT 'Status: open or resolved',
+  category VARCHAR(50) COMMENT 'Item category (Electronics, Accessories, etc.)',
+  location VARCHAR(200) COMMENT 'Location where item was lost/found',
+  date DATE COMMENT 'Date when item was lost/found',
+  image TEXT COMMENT 'Image URL or base64 data',
   user_id INT NOT NULL COMMENT 'User who created this post',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Post creation timestamp',
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last update timestamp',
@@ -73,7 +77,8 @@ CREATE TABLE posts (
   INDEX idx_type (type) COMMENT 'Filter posts by lost/found',
   INDEX idx_status (status) COMMENT 'Filter posts by status',
   INDEX idx_user_id (user_id) COMMENT 'Get all posts by a user',
-  INDEX idx_created_at (created_at) COMMENT 'Sort posts chronologically'
+  INDEX idx_created_at (created_at) COMMENT 'Sort posts chronologically',
+  INDEX idx_category (category) COMMENT 'Filter posts by category'
 ) ENGINE=InnoDB 
   DEFAULT CHARSET=utf8mb4 
   COLLATE=utf8mb4_unicode_ci

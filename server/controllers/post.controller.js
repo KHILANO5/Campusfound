@@ -5,11 +5,11 @@ import db from "../config/db.js";
 // @access  Public
 export const createPost = async (req, res) => {
   try {
-    const { title, description, type, user_id } = req.body;
+    const { title, description, type, category, location, date, image, user_id } = req.body;
 
-    // Validate input
-    if (!title || !description || !type || !user_id) {
-      return res.status(400).json({ message: "All fields are required" });
+    // Validate required input
+    if (!title || !description || !type) {
+      return res.status(400).json({ message: "Title, description, and type are required" });
     }
 
     // Validate type (must match schema ENUM: 'lost' or 'found')
@@ -17,32 +17,48 @@ export const createPost = async (req, res) => {
       return res.status(400).json({ message: "Type must be 'lost' or 'found'" });
     }
 
+    // Use default user_id (1) if not provided - for development/demo purposes
+    const postUserId = user_id || 1;
+
     // Verify user exists
     const [userCheck] = await db.query(
       "SELECT user_id FROM users WHERE user_id = ?",
-      [user_id]
+      [postUserId]
     );
 
     if (userCheck.length === 0) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Insert post (matches schema: title, description, type, user_id)
-    // status defaults to 'open', created_at and updated_at auto-set
+    // Insert post with all fields
     const [result] = await db.query(
-      "INSERT INTO posts (title, description, type, user_id) VALUES (?, ?, ?, ?)",
-      [title, description, type, user_id]
+      "INSERT INTO posts (title, description, type, category, location, date, image, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [title, description, type, category || null, location || null, date || null, image || null, postUserId]
     );
 
-    res.status(201).json({
-      message: "Post created successfully",
-      post_id: result.insertId,
-      title,
-      description,
-      type,
-      status: 'open',
-      user_id,
-    });
+    // Fetch the complete post with user info to return
+    const [newPost] = await db.query(`
+      SELECT 
+        p.post_id,
+        p.title,
+        p.description,
+        p.type,
+        p.status,
+        p.category,
+        p.location,
+        p.date,
+        p.image,
+        p.user_id,
+        p.created_at,
+        p.updated_at,
+        u.name as user_name,
+        u.email as user_email
+      FROM posts p
+      JOIN users u ON p.user_id = u.user_id
+      WHERE p.post_id = ?
+    `, [result.insertId]);
+
+    res.status(201).json(newPost[0]);
   } catch (error) {
     console.error("Create post error:", error);
     res.status(500).json({ message: "Server error creating post" });
@@ -62,6 +78,10 @@ export const getPosts = async (req, res) => {
         p.description,
         p.type,
         p.status,
+        p.category,
+        p.location,
+        p.date,
+        p.image,
         p.user_id,
         p.created_at,
         p.updated_at,
@@ -93,6 +113,10 @@ export const getPostById = async (req, res) => {
         p.description,
         p.type,
         p.status,
+        p.category,
+        p.location,
+        p.date,
+        p.image,
         p.user_id,
         p.created_at,
         p.updated_at,
