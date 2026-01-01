@@ -24,9 +24,16 @@ const PostCard = ({ post }) => {
                             </span>
                         )}
                     </div>
-                    <span className="text-sm text-gray-400 flex items-center gap-1">
-                        <Calendar className="w-3 h-3" /> {new Date(post.created_at).toLocaleDateString()}
-                    </span>
+                </div>
+
+                {post.image && (
+                    <div className="mb-4 -mx-6 mt-[-1rem]">
+                        <img src={post.image} alt={post.title} className="w-full h-48 object-cover" />
+                    </div>
+                )}
+
+                <div className="flex items-center gap-1 text-gray-400 text-sm mb-2">
+                    <Calendar className="w-3 h-3" /> {new Date(post.created_at).toLocaleDateString()}
                 </div>
 
                 <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1">{post.title}</h3>
