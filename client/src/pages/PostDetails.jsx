@@ -3,13 +3,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Calendar, Tag, CheckCircle, ArrowLeft, Share2, Flag } from 'lucide-react';
 import Layout from '../components/Layout';
 import Button from '../components/Button';
-import { DUMMY_POSTS } from '../data/posts';
+import { usePosts } from '../context/PostContext';
 
 const PostDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { posts, updatePost } = usePosts();
 
-    const post = DUMMY_POSTS.find(p => p.post_id === parseInt(id));
+    const post = posts.find(p => p.post_id === parseInt(id));
 
     if (!post) {
         return (
@@ -26,6 +27,20 @@ const PostDetails = () => {
 
     const isLost = post.type === 'lost';
     const isResolved = post.status === 'resolved';
+
+    const handleContact = () => {
+        navigate(`/posts/${post.post_id}/contact`);
+    };
+
+    const handleResolve = () => {
+        const confirmMsg = isLost
+            ? "Are you sure you found this item? This will mark the post as resolved."
+            : "Is this your item? This will mark the post as resolved.";
+
+        if (window.confirm(confirmMsg)) {
+            updatePost(post.post_id, { status: 'resolved' });
+        }
+    };
 
     return (
         <Layout>
@@ -51,8 +66,8 @@ const PostDetails = () => {
                         <div className="flex justify-between items-start mb-6">
                             <div className="flex items-center gap-3">
                                 <span className={`px-4 py-1.5 text-sm font-bold rounded-full uppercase tracking-wide ${isLost
-                                        ? 'bg-red-50 text-red-700 border border-red-100'
-                                        : 'bg-green-50 text-green-700 border border-green-100'
+                                    ? 'bg-red-50 text-red-700 border border-red-100'
+                                    : 'bg-green-50 text-green-700 border border-green-100'
                                     }`}>
                                     {post.type}
                                 </span>
@@ -72,6 +87,12 @@ const PostDetails = () => {
                         </div>
 
                         <h1 className="text-3xl font-bold text-gray-900 mb-6">{post.title}</h1>
+
+                        {post.image && (
+                            <div className="mb-8 rounded-lg overflow-hidden border border-gray-100">
+                                <img src={post.image} alt={post.title} className="w-full h-auto max-h-96 object-cover" />
+                            </div>
+                        )}
 
                         <div className="prose max-w-none text-gray-600 mb-8 leading-relaxed">
                             <p>{post.description}</p>
@@ -114,20 +135,29 @@ const PostDetails = () => {
                                 Reported by <span className="font-medium text-gray-900">John Doe</span>
                             </div>
 
-                            <div className="flex gap-3 w-full sm:w-auto">
-                                <Button variant="secondary" className="flex-1 sm:flex-none justify-center">
-                                    Contact Reporter
-                                </Button>
-                                {isLost ? (
-                                    <Button className="flex-1 sm:flex-none justify-center">
-                                        I Found This!
+                            {!isResolved && (
+                                <div className="flex gap-3 w-full sm:w-auto">
+                                    <Button variant="secondary" className="flex-1 sm:flex-none justify-center" onClick={handleContact}>
+                                        Contact Reporter
                                     </Button>
-                                ) : (
-                                    <Button className="flex-1 sm:flex-none justify-center">
-                                        This is Mine!
+                                    {isLost ? (
+                                        <Button className="flex-1 sm:flex-none justify-center" onClick={handleResolve}>
+                                            I Found This!
+                                        </Button>
+                                    ) : (
+                                        <Button className="flex-1 sm:flex-none justify-center" onClick={handleResolve}>
+                                            This is Mine!
+                                        </Button>
+                                    )}
+                                </div>
+                            )}
+                            {isResolved && (
+                                <div className="flex gap-3 w-full sm:w-auto">
+                                    <Button variant="outline" disabled className="flex-1 sm:flex-none justify-center opacity-50 cursor-not-allowed">
+                                        Resolved
                                     </Button>
-                                )}
-                            </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

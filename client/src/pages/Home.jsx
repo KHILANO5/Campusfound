@@ -1,83 +1,148 @@
-import React, { useState } from 'react';
-import { Search, Filter } from 'lucide-react';
-import PostCard from '../components/PostCard';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Search, PlusCircle, ArrowRight, Shield, Clock, Users } from 'lucide-react';
 import Layout from '../components/Layout';
-import { DUMMY_POSTS } from '../data/posts';
+import Button from '../components/Button';
 
 const Home = () => {
-    const [filter, setFilter] = useState('all'); // all, lost, found
-    const [search, setSearch] = useState('');
-
-    const filteredPosts = DUMMY_POSTS.filter(post => {
-        const matchesFilter = filter === 'all' || post.type === filter;
-        const matchesSearch = post.title.toLowerCase().includes(search.toLowerCase()) ||
-            post.description.toLowerCase().includes(search.toLowerCase());
-        return matchesFilter && matchesSearch;
-    });
-
     return (
         <Layout>
-            <div className="mb-8 space-y-4 md:space-y-0 md:flex md:items-center md:justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Recent Activity</h1>
-                    <p className="text-gray-500 mt-1">Check what's been lost and found on campus recently.</p>
+            {/* Hero Section */}
+            <div className="relative overflow-hidden py-16 sm:py-24">
+                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                    >
+                        <h1 className="text-4xl sm:text-6xl font-extrabold text-gray-900 tracking-tight mb-4">
+                            Lost something on <span className="text-blue-600">Campus?</span>
+                        </h1>
+                        <p className="mt-4 text-xl text-gray-500 max-w-2xl mx-auto">
+                            Don't panic! CampusFound helps you reconnect with your lost belongings.
+                            Report items you've found or search for what you've lost.
+                        </p>
+                    </motion.div>
+
+                    <motion.div
+                        className="mt-10 flex justify-center gap-4"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.3, duration: 0.5 }}
+                    >
+                        <Link to="/feed">
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="px-8 py-4 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-200 flex items-center gap-2"
+                            >
+                                <Search className="w-5 h-5" /> Browse Items
+                            </motion.button>
+                        </Link>
+                        <Link to="/create-post">
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="px-8 py-4 bg-white text-blue-600 border-2 border-blue-100 rounded-xl font-bold shadow-sm hover:border-blue-200 flex items-center gap-2"
+                            >
+                                <PlusCircle className="w-5 h-5" /> Report Item
+                            </motion.button>
+                        </Link>
+                    </motion.div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3">
-                    <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <input
-                            type="text"
-                            placeholder="Search items..."
-                            className="pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full sm:w-64"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
-                    </div>
+                {/* Animated Background Blobs */}
+                <motion.div
+                    animate={{
+                        x: [0, 100, 0],
+                        y: [0, -50, 0],
+                        rotate: [0, 360]
+                    }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    className="absolute top-1/4 left-1/4 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 -z-10"
+                />
+                <motion.div
+                    animate={{
+                        x: [0, -100, 0],
+                        y: [0, 50, 0],
+                        rotate: [0, -360]
+                    }}
+                    transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                    className="absolute top-1/3 right-1/4 w-72 h-72 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 -z-10"
+                />
+                <motion.div
+                    animate={{
+                        x: [0, 50, 0],
+                        y: [0, 100, 0],
+                        scale: [1, 1.2, 1]
+                    }}
+                    transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+                    className="absolute -bottom-8 left-1/3 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 -z-10"
+                />
+            </div>
 
-                    <div className="flex bg-white rounded-lg border border-gray-300 p-1">
-                        <button
-                            onClick={() => setFilter('all')}
-                            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${filter === 'all' ? 'bg-gray-100 text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
-                                }`}
-                        >
-                            All
-                        </button>
-                        <button
-                            onClick={() => setFilter('lost')}
-                            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${filter === 'lost' ? 'bg-red-50 text-red-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
-                                }`}
-                        >
-                            Lost
-                        </button>
-                        <button
-                            onClick={() => setFilter('found')}
-                            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${filter === 'found' ? 'bg-green-50 text-green-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
-                                }`}
-                        >
-                            Found
-                        </button>
+            {/* Features Section */}
+            <div className="py-20 bg-white/50 backdrop-blur-sm">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <FeatureCard
+                            icon={<Shield className="w-8 h-8 text-blue-600" />}
+                            title="Secure Platform"
+                            description="Verified student access ensures your items are in safe hands."
+                            delay={0.2}
+                        />
+                        <FeatureCard
+                            icon={<Clock className="w-8 h-8 text-purple-600" />}
+                            title="Real-time Updates"
+                            description="Get notified instantly when your item status changes."
+                            delay={0.4}
+                        />
+                        <FeatureCard
+                            icon={<Users className="w-8 h-8 text-green-600" />}
+                            title="Community Driven"
+                            description="Join thousands of students helping each other every day."
+                            delay={0.6}
+                        />
                     </div>
                 </div>
             </div>
 
-            {filteredPosts.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredPosts.map(post => (
-                        <PostCard key={post.post_id} post={post} />
-                    ))}
+            {/* CTA Section */}
+            <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="py-16 text-center"
+            >
+                <div className="max-w-3xl mx-auto px-4">
+                    <h2 className="text-3xl font-bold text-gray-900 mb-6">Ready to help the community?</h2>
+                    <Link to="/register">
+                        <Button variant="primary" className="px-8 py-3 rounded-full text-lg shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1">
+                            Join CampusFound Today <ArrowRight className="inline-block ml-2 w-5 h-5" />
+                        </Button>
+                    </Link>
                 </div>
-            ) : (
-                <div className="text-center py-16 bg-white rounded-xl border border-dashed border-gray-300">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
-                        <Search className="h-6 w-6 text-gray-400" />
-                    </div>
-                    <h3 className="mt-2 text-sm font-semibold text-gray-900">No matches found</h3>
-                    <p className="mt-1 text-sm text-gray-500">Try adjusting your search or filter to find what you're looking for.</p>
-                </div>
-            )}
+            </motion.div>
         </Layout>
     );
 };
+
+const FeatureCard = ({ icon, title, description, delay }) => (
+    <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay, duration: 0.5 }}
+        whileHover={{ y: -5 }}
+        className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+    >
+        <div className="mb-4 p-3 bg-gray-50 rounded-xl inline-block">
+            {icon}
+        </div>
+        <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
+        <p className="text-gray-500">{description}</p>
+    </motion.div>
+);
 
 export default Home;

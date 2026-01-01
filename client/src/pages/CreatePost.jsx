@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import Button from '../components/Button';
 import { Upload } from 'lucide-react';
+import { usePosts } from '../context/PostContext';
 
 const CreatePost = () => {
+    const navigate = useNavigate();
+    const { addPost } = usePosts();
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -13,14 +17,35 @@ const CreatePost = () => {
         date: ''
     });
 
+    const [imagePreview, setImagePreview] = useState(null);
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // For this dummy implementation, we'll just use the object URL or base64
+            // In a real app, you'd upload to cloud storage
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+                setFormData({ ...formData, image: reader.result }); // Storing data URL for preview persist
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const removeImage = () => {
+        setFormData({ ...formData, image: null });
+        setImagePreview(null);
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Post created:', formData);
-        // TODO: Implement actual create post logic
+        addPost(formData);
+        navigate('/');
     };
 
     return (
@@ -73,6 +98,7 @@ const CreatePost = () => {
                                     id="date"
                                     name="date"
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                                    max={new Date().toISOString().split('T')[0]}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -145,13 +171,35 @@ const CreatePost = () => {
                             </div>
                         </div>
 
-                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:bg-gray-50 transition-colors cursor-pointer">
-                            <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                            <span className="mt-2 block text-sm font-medium text-gray-600">
-                                Upload an image (Optional)
-                            </span>
-                            <p className="mt-1 text-xs text-gray-500">PNG, JPG up to 5MB</p>
-                        </div>
+                        {!imagePreview ? (
+                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:bg-gray-50 transition-colors cursor-pointer relative">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                />
+                                <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                                <span className="mt-2 block text-sm font-medium text-gray-600">
+                                    Upload an image (Optional)
+                                </span>
+                                <p className="mt-1 text-xs text-gray-500">PNG, JPG up to 5MB</p>
+                            </div>
+                        ) : (
+                            <div className="relative rounded-lg overflow-hidden border border-gray-200">
+                                <img src={imagePreview} alt="Preview" className="w-full h-64 object-cover" />
+                                <button
+                                    type="button"
+                                    onClick={removeImage}
+                                    className="absolute top-2 right-2 bg-white text-gray-700 p-1.5 rounded-full shadow-md hover:bg-gray-100 focus:outline-none"
+                                >
+                                    <span className="sr-only">Remove image</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                        )}
 
 
                         <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
