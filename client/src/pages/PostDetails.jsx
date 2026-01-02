@@ -8,9 +8,19 @@ import { usePosts } from '../context/PostContext';
 const PostDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { posts, updatePost } = usePosts();
+    const { posts, loading, updatePost } = usePosts();
 
     const post = posts.find(p => p.post_id === parseInt(id));
+
+    if (loading) {
+        return (
+            <Layout>
+                <div className="flex justify-center items-center h-64">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                </div>
+            </Layout>
+        );
+    }
 
     if (!post) {
         return (

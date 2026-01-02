@@ -45,7 +45,7 @@ const CreatePost = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         addPost(formData);
-        navigate('/');
+        navigate('/feed');
     };
 
     return (

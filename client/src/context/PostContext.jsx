@@ -28,14 +28,29 @@ export const PostProvider = ({ children }) => {
         setPosts([post, ...posts]);
     };
 
-    const updatePost = (postId, updates) => {
-        setPosts(posts.map(post =>
-            post.post_id === postId ? { ...post, ...updates } : post
-        ));
+    const updatePost = async (postId, updates) => {
+        try {
+            // Check if it's a resolve action
+            if (updates.status === 'resolved') {
+                const response = await fetch(`http://localhost:3000/api/posts/${postId}/resolve`, {
+                    method: 'PUT',
+                });
+                if (!response.ok) throw new Error('Failed to resolve post');
+            }
+
+            // For now, optimistically update local state or re-fetch
+            // Since we don't have a generic update endpoint yet, specific actions like resolve are handled
+            setPosts(posts.map(post =>
+                post.post_id === postId ? { ...post, ...updates } : post
+            ));
+
+        } catch (err) {
+            console.error("Error updating post:", err);
+        }
     };
 
     return (
-        <PostContext.Provider value={{ posts, addPost, updatePost }}>
+        <PostContext.Provider value={{ posts, loading, error, addPost, updatePost }}>
             {children}
         </PostContext.Provider>
     );
