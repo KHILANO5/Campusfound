@@ -1,12 +1,19 @@
-import React, { createContext, useState, useContext } from 'react';
-import { DUMMY_POSTS } from '../data/posts';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const PostContext = createContext();
 
 export const usePosts = () => useContext(PostContext);
 
 export const PostProvider = ({ children }) => {
-    const [posts, setPosts] = useState(DUMMY_POSTS);
+    const [posts, setPosts] = useState([]);
+
+    // Fetch posts from the server when the app starts
+    useEffect(() => {
+        fetch('http://localhost:3000/api/posts')
+            .then(res => res.json())
+            .then(data => setPosts(data))
+            .catch(err => console.error("Error fetching posts:", err));
+    }, []);
 
     const addPost = (newPost) => {
         // Create a new post object with a unique ID and current timestamp
